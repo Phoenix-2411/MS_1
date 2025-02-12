@@ -1,9 +1,10 @@
 'use strict';
-const { v4: UUIDV4 } = require('uuid');
-/** @type {import('sequelize-cli').Migration} */
+
+const { UUIDV4 } = require("sequelize");
+
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('regulatedEntityInspectionType', {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable("regulatedEntity", {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -14,12 +15,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      regulatedEntityId: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: { model: 'regulatedEntity', key: 'id' }
-      },
-      inspectionTypeCode: {
+      entityType: {
         type: Sequelize.STRING
       },
       name: {
@@ -29,17 +25,8 @@ module.exports = {
       address: {
         type: Sequelize.TEXT
       },
-      defaultResponsibleContact: {
-        type: Sequelize.UUID
-      },
-      defaultComplianceContact: {
-        type: Sequelize.UUID
-      },
-      latitude: {
-        type: Sequelize.FLOAT
-      },
-      longitude: {
-        type: Sequelize.FLOAT
+      zip: {
+        type: Sequelize.STRING
       },
       state: {
         type: Sequelize.STRING,
@@ -51,14 +38,19 @@ module.exports = {
       municipality: {
         type: Sequelize.STRING
       },
-      mailingAddress: {
-        type: Sequelize.STRING,
-        allowNull: false
+      latitude: {
+        type: Sequelize.FLOAT
       },
-      attributeMap: {
-        type: Sequelize.JSONB
+      longitude: {
+        type: Sequelize.FLOAT
       },
       clientMetaData: {
+        type: Sequelize.JSONB
+      },
+      owners: {
+        type: Sequelize.STRING
+      },
+      attributeMap: {
         type: Sequelize.JSONB
       },
       active: {
@@ -91,9 +83,10 @@ module.exports = {
       schema: 'regulatedentityservice'
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable({
-      tableName: 'regulatedEntityInspectionType',
+
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable({
+      tableName: 'regulatedEntity',
       schema: 'regulatedentityservice'
     });
   }

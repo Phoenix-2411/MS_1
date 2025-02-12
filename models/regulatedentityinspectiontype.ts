@@ -162,6 +162,7 @@ export function initRegulatedEntityInspectionType(sequelize: Sequelize) {
       sequelize,
       modelName: 'RegulatedEntityInspectionType',
       tableName: 'regulatedEntityInspectionType',
+      schema: 'regulatedentityservice',
       timestamps: true
     }
   );

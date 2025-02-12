@@ -1,9 +1,10 @@
 'use strict';
-const { v4: UUIDV4 } = require('uuid');
-/** @type {import('sequelize-cli').Migration} */
+
+const { UUIDV4 } = require("sequelize");
+
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('regulatedEntityItem', {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable("regulatedEntityItem", {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -69,8 +70,9 @@ module.exports = {
       schema: 'regulatedentityservice'
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable({
+
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable({
       tableName: 'regulatedEntityItem',
       schema: 'regulatedentityservice'
     });

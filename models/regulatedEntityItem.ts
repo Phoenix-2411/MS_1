@@ -32,7 +32,7 @@ export interface RegulatedEntityItemAttachmentAttributes {
 }
 
 // Define the class
-export class RegulatedEntityInspectionType extends Model<
+export class RegulatedEntityItem extends Model<
   RegulatedEntityItemAttributes
 > implements RegulatedEntityItemAttributes {
   id?: string;
@@ -56,8 +56,8 @@ export class RegulatedEntityInspectionType extends Model<
 }
 
 // Define the init method separately
-export function initRegulatedEntityInspectionType(sequelize: Sequelize) {
-  RegulatedEntityInspectionType.init(
+export function initRegulatedEntityItem(sequelize: Sequelize) {
+  RegulatedEntityItem.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -126,8 +126,9 @@ export function initRegulatedEntityInspectionType(sequelize: Sequelize) {
     },
     {
       sequelize,
-      modelName: 'RegulatedEntityInspectionType',
+      modelName: 'RegulatedEntityItem',
       tableName: 'regulatedEntityItem',
+      schema: 'regulatedentityservice',
       timestamps: true
     }
   );

@@ -52,7 +52,7 @@ export class RegulatedEntity extends Model<RegulatedEntityAttributes> implements
     // define association here
   }
 }
-export function initRegulatedEntityInspectionType(sequelize: Sequelize) {
+export function initRegulatedEntity(sequelize: Sequelize) {
   RegulatedEntity.init({
     id: {
       type: DataTypes.UUID,
