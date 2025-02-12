@@ -1,22 +1,22 @@
-import { DataTypes, Model, UUIDV4 } from 'sequelize';
+import { DataTypes, Model, UUIDV4, Sequelize } from 'sequelize';
 
-export interface regulatedEntityAttributes {
-  id?: string;
-  clientCode?: string;
+export interface RegulatedEntityAttributes {
+  id: string;
+  clientCode: string;
   entityType?: string;
   externalId?: string;
-  name?: string;
+  name: string;
   address?: string;
   zip?: string;
   country?: string;
-  state?: string;
+  state: string;
   county?: string;
   municipality?: string;
   latitude?: number;
   longitude?: number;
   clientMetaData: any;
-  owners?: string;
-  attributeMap?: any;
+  owners: string;
+  attributeMap: any;
   active?: Boolean;
   deleted?: Boolean;
   createdAt?: string;
@@ -25,35 +25,35 @@ export interface regulatedEntityAttributes {
   updatedBy?: string;
 }
 
-module.exports = (sequelize: any, DataTypes: any) => {
-  class regulatedEntity extends Model<regulatedEntityAttributes> implements regulatedEntityAttributes {
-    id?: string;
-    clientCode?: string;
-    entityType?: string;
-    externalId?: string;
-    name?: string;
-    address?: string;
-    zip?: string;
-    country?: string;
-    state?: string;
-    county?: string;
-    municipality?: string;
-    latitude?: number;
-    longitude?: number;
-    clientMetaData: any;
-    owners?: string;
-    attributeMap?: any;
-    active?: Boolean;
-    deleted?: Boolean;
-    createdAt?: string;
-    updatedAt?: string;
-    createdBy?: string;
-    updatedBy?: string;
-    static associate(models: any) {
-      // define association here
-    }
+export class RegulatedEntity extends Model<RegulatedEntityAttributes> implements RegulatedEntityAttributes {
+  id!: string;
+  clientCode!: string;
+  entityType?: string;
+  externalId?: string;
+  name!: string;
+  address?: string;
+  zip?: string;
+  country?: string;
+  state!: string;
+  county?: string;
+  municipality?: string;
+  latitude?: number;
+  longitude?: number;
+  clientMetaData: any;
+  owners!: string;
+  attributeMap: any;
+  active?: Boolean;
+  deleted?: Boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  static associate(models: any) {
+    // define association here
   }
-  regulatedEntity.init({
+}
+export function initRegulatedEntityInspectionType(sequelize: Sequelize) {
+  RegulatedEntity.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -125,20 +125,18 @@ module.exports = (sequelize: any, DataTypes: any) => {
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE,
-      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP')
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
     },
     updatedAt: {
       allowNull: false,
       type: DataTypes.DATE,
-      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP')
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
     }
   }, {
     sequelize,
-    modelName: 'regulatedEntity',
-    freezeTableName: true,
+    modelName: 'RegulatedEntity',
     timestamps: true,
     schema: 'regulatedentityservice',
     tableName: 'regulatedEntity',
   });
-  return regulatedEntity;
-};
+}
