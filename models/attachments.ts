@@ -46,6 +46,12 @@ export class Attachments extends Model<
 
   static associate(models: any) {
     // Define associations here
+    Attachments.belongsTo(models.RegulatedEntityInspectionType,
+      { foreignKey: 'regulatedEntityInspectionTypeId', targetKey: 'id' });
+    Attachments.belongsTo(models.RegulatedEntityItem,
+      { foreignKey: 'regulatedEntityItemId', targetKey: 'id' });
+    Attachments.belongsTo(models.RegulatedEntity,
+      { foreignKey: 'regulatedEntityId', targetKey: 'id' });
   }
 }
 

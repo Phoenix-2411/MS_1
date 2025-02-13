@@ -68,6 +68,8 @@ export class Contacts extends Model<
 
   static associate(models: any) {
     // Define associations here
+    Contacts.belongsTo(models.RegulatedEntityInspectionType);
+    Contacts.belongsTo(models.RegulatedEntity);
   }
 }
 

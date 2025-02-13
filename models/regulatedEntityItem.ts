@@ -52,6 +52,12 @@ export class RegulatedEntityItem extends Model<
 
   static associate(models: any) {
     // Define associations here
+    RegulatedEntityItem.belongsTo(models.RegulatedEntity, { foreignKey: 'regulatedEntityId' });
+    RegulatedEntityItem.belongsTo(models.RegulatedEntityInspectionType, {
+      as: 'reInspectionType',
+      foreignKey: 'regulatedEntityInspectionTypeId'
+    });
+    RegulatedEntityItem.hasMany(models.Attachments);
   }
 }
 
