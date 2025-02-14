@@ -40,8 +40,8 @@ RegulatedEntityItem.belongsTo(RegulatedEntityInspectionType, { as: 'reInspection
 RegulatedEntityItem.hasMany(Attachments);
 
 //Contacts
-Contacts.belongsTo(RegulatedEntityInspectionType);
-Contacts.belongsTo(RegulatedEntity);
+Contacts.belongsTo(RegulatedEntityInspectionType, { foreignKey: 'regulatedEntityInspectionTypeId' });
+Contacts.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId' });
 
 Attachments.removeAttribute('RegulatedEntityInspectionTypeId');
 Attachments.removeAttribute('RegulatedEntityItemId');
@@ -49,6 +49,7 @@ Attachments.removeAttribute('RegulatedEntityItemId');
 Attachments.belongsTo(RegulatedEntityInspectionType, { foreignKey: 'regulatedEntityInspectionTypeId', targetKey: 'id' });
 Attachments.belongsTo(RegulatedEntityItem, { foreignKey: 'regulatedEntityItemId', targetKey: 'id' });
 Attachments.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId', targetKey: 'id' });
+// console.log("-------row--------", row);
 
 
 //ReitDetails

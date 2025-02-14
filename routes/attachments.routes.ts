@@ -15,7 +15,7 @@ router.get('/find', async (req: Request, res: Response) => {
     }
 });
 
-router.get('/list', async (req: Request, res: Response): Promise<void> => {
+router.get('/list', async (req: Request, res: Response) => {
     try {
         const { page = '1', pageSize = '10', all = 'false', ...filters } = req.query;
 
