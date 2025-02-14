@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import sequelize from './db';
+import { attachmentsRouter } from './routes/attachments.routes';
 
 dotenv.config();
 const app = express();
@@ -20,4 +21,5 @@ async function startServer() {
     }
 }
 
-startServer(); 
+app.use('/attachments', attachmentsRouter);
+startServer();

@@ -59,12 +59,6 @@ export class RegulatedEntityInspectionType extends Model<
 
   static associate(models: any) {
     // Define associations here
-    RegulatedEntityInspectionType.belongsTo(models.RegulatedEntity, { foreignKey: 'regulatedEntityId' });
-    RegulatedEntityInspectionType.hasMany(models.RegulatedEntityItem, { as: 'reItem', foreignKey: 'regulatedEntityInspectionTypeId' });
-    RegulatedEntityInspectionType.hasMany(models.RiskMetric, { as: 'riskMetrics', foreignKey: 'regulatedEntityInspectionTypeId' });
-    RegulatedEntityInspectionType.hasMany(models.Contacts, { as: 'contact', foreignKey: 'regulatedEntityInspectionTypeId' });
-    RegulatedEntityInspectionType.hasMany(models.Attachments);
-    RegulatedEntityInspectionType.hasOne(models.ReitDetails);
   }
 }
 

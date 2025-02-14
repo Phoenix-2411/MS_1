@@ -3,7 +3,7 @@ import config from './config/config';
 // import { RegulatedEntityInspectionType } from './models/RegulatedEntityInspectionType';
 
 const env = process.env.NODE_ENV || 'development';
-const dbConfig = (config as { [key: string]: Options })[env];
+const dbConfig = (config as unknown as { [key: string]: Options })[env];
 
 const sequelize = new Sequelize({
     ...dbConfig,

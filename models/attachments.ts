@@ -46,12 +46,6 @@ export class Attachments extends Model<
 
   static associate(models: any) {
     // Define associations here
-    Attachments.belongsTo(models.RegulatedEntityInspectionType,
-      { foreignKey: 'regulatedEntityInspectionTypeId', targetKey: 'id' });
-    Attachments.belongsTo(models.RegulatedEntityItem,
-      { foreignKey: 'regulatedEntityItemId', targetKey: 'id' });
-    Attachments.belongsTo(models.RegulatedEntity,
-      { foreignKey: 'regulatedEntityId', targetKey: 'id' });
   }
 }
 
@@ -67,11 +61,13 @@ export function initAttachments(sequelize: Sequelize) {
       },
       regulatedEntityInspectionTypeId: {
         type: DataTypes.UUID,
-        references: { model: 'regulatedEntityInspectionType', key: 'id' }
+        references: { model: 'regulatedEntityInspectionType', key: 'id' },
+        field: 'regulatedEntityInspectionTypeId'
       },
       regulatedEntityItemId: {
         type: DataTypes.UUID,
-        references: { model: 'regulatedEntityItem', key: 'id' }
+        references: { model: 'regulatedEntityItem', key: 'id' },
+        field: 'regulatedEntityItemId'
       },
       mimeType: {
         type: DataTypes.STRING
@@ -118,7 +114,8 @@ export function initAttachments(sequelize: Sequelize) {
       },
       regulatedEntityId: {
         type: DataTypes.UUID,
-        references: { model: 'regulatedEntity', key: 'id' }
+        references: { model: 'regulatedEntity', key: 'id' },
+        field: 'regulatedEntityId'
       },
     },
     {

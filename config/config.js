@@ -1,32 +1,25 @@
-import dotenv from 'dotenv';
+require('dotenv').config();
 
-dotenv.config();
-
-const config = {
-  development: {
-    dialect: 'postgres',
-    database: process.env.POSTGRES_DB_NAME || 'MS_1',
-    username: process.env.POSTGRES_DB_USERNAME || 'postgres',
-    password: process.env.POSTGRES_DB_PASSWORD || 'root',
-    host: process.env.POSTGRES_DB_HOST || 'localhost',
-    port: parseInt(process.env.POSTGRES_DB_PORT || '5432'),
+module.exports = {
+  "development": {
+    "username": process.env.POSTGRES_DB_USERNAME,
+    "password": process.env.POSTGRES_DB_PASSWORD,
+    "database": process.env.POSTGRES_DB_NAME,
+    "host": process.env.POSTGRES_DB_HOST,
+    "dialect": process.env.DB_DIALECT
   },
-  test: {
-    dialect: 'postgres',
-    database: process.env.POSTGRES_DB_NAME || 'MS_1',
-    username: process.env.POSTGRES_DB_USERNAME || 'postgres',
-    password: process.env.POSTGRES_DB_PASSWORD || 'root',
-    host: process.env.POSTGRES_DB_HOST || 'localhost',
-    port: parseInt(process.env.POSTGRES_DB_PORT || '5432'),
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
   },
-  production: {
-    dialect: 'postgres',
-    database: process.env.POSTGRES_DB_NAME || 'MS_1',
-    username: process.env.POSTGRES_DB_USERNAME || 'postgres',
-    password: process.env.POSTGRES_DB_PASSWORD || 'root',
-    host: process.env.POSTGRES_DB_HOST || 'localhost',
-    port: parseInt(process.env.POSTGRES_DB_PORT || '5432'),
-  },
-};
-
-export default config;
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

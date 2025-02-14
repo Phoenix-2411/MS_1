@@ -34,7 +34,7 @@ export class ReitDetails extends Model<
 
   static associate(models: any) {
     // Define associations here
-    ReitDetails.belongsTo(models.RegulatedEntityInspectionType);
+
     // ReitDetails.removeAttribute('id');
   }
 

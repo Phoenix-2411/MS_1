@@ -29,10 +29,7 @@ export class RiskMetric extends Model<
 
   static associate(models: any) {
     // Define associations here
-    RiskMetric.belongsTo(models.RegulatedEntityInspectionType, {
-      as: 'reInspectionType',
-      foreignKey: 'regulatedEntityInspectionTypeId'
-    });
+
   }
 }
 

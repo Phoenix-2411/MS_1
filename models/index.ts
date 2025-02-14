@@ -1,43 +1,76 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-// const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
-const db: any = {};
+import sequelize from '../db'; // Import Sequelize instance
+import { Attachments, initAttachments } from './attachments';
+import { Contacts, initContacts } from './contacts';
+import { CovidData, initCovidData } from './covidData';
+import { RegulatedEntity, initRegulatedEntity } from './regulatedEntity';
+import { RegulatedEntityInspectionType, initRegulatedEntityInspectionType } from './regulatedentityinspectiontype';
+import { RegulatedEntityItem, initRegulatedEntityItem } from './regulatedEntityItem';
+import { ReitDetails, initReitDetails } from './reitDetails';
+import { RiskMetric, initRiskMetric } from './riskMetric';
 
-let sequelize: any;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+// Initialize models first
+initRegulatedEntity(sequelize);
+initRegulatedEntityInspectionType(sequelize);
+initRegulatedEntityItem(sequelize);
+initContacts(sequelize);
+initAttachments(sequelize);
+initReitDetails(sequelize);
+initCovidData(sequelize);
+initRiskMetric(sequelize);
 
-fs
-  .readdirSync(__dirname)
-  .filter((file: string) => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach((file: any) => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+//RegulatedEntity
+RegulatedEntity.hasMany(RegulatedEntityInspectionType, { as: 'reInspectionType', foreignKey: 'regulatedEntityId' });
+RegulatedEntity.hasMany(RegulatedEntityItem, { as: 'reItem', foreignKey: 'regulatedEntityId' });
+RegulatedEntity.hasMany(Contacts, { as: 'contacts', foreignKey: 'regulatedEntityId' });
+RegulatedEntity.hasMany(Attachments, { as: 'attachments', foreignKey: 'regulatedEntityId' });
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
+//RegulatedEntityInspectionType
+RegulatedEntityInspectionType.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId' });
+RegulatedEntityInspectionType.hasMany(RegulatedEntityItem, { as: 'reItem', foreignKey: 'regulatedEntityInspectionTypeId' });
+RegulatedEntityInspectionType.hasMany(RiskMetric, { as: 'riskMetrics', foreignKey: 'regulatedEntityInspectionTypeId' });
+RegulatedEntityInspectionType.hasMany(Contacts, { as: 'contact', foreignKey: 'regulatedEntityInspectionTypeId' });
+RegulatedEntityInspectionType.hasMany(Attachments);
+RegulatedEntityInspectionType.hasOne(ReitDetails);
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+//RegulatedEntityItem
+RegulatedEntityItem.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId' });
+RegulatedEntityItem.belongsTo(RegulatedEntityInspectionType, { as: 'reInspectionType', foreignKey: 'regulatedEntityInspectionTypeId' });
+RegulatedEntityItem.hasMany(Attachments);
 
-module.exports = db;
+//Contacts
+Contacts.belongsTo(RegulatedEntityInspectionType);
+Contacts.belongsTo(RegulatedEntity);
+
+Attachments.removeAttribute('RegulatedEntityInspectionTypeId');
+Attachments.removeAttribute('RegulatedEntityItemId');
+//Attachments
+Attachments.belongsTo(RegulatedEntityInspectionType, { foreignKey: 'regulatedEntityInspectionTypeId', targetKey: 'id' });
+Attachments.belongsTo(RegulatedEntityItem, { foreignKey: 'regulatedEntityItemId', targetKey: 'id' });
+Attachments.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId', targetKey: 'id' });
+
+
+//ReitDetails
+ReitDetails.belongsTo(RegulatedEntityInspectionType);
+
+//RiskMetric
+RiskMetric.belongsTo(RegulatedEntityInspectionType, { as: 'reInspectionType', foreignKey: 'regulatedEntityInspectionTypeId' });
+
+// Create db object to export
+const db: any = {
+  RegulatedEntity,
+  RegulatedEntityInspectionType,
+  RegulatedEntityItem,
+  Contacts,
+  Attachments,
+  ReitDetails,
+  CovidData,
+  RiskMetric,
+  sequelize,
+};
+
+// Log loaded models
+// console.log('Loaded Models:', Object.keys(db));
+
+export { db as Models };

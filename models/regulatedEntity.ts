@@ -50,22 +50,6 @@ export class RegulatedEntity extends Model<RegulatedEntityAttributes> implements
   updatedBy?: string;
   static associate(models: any) {
     // define association here
-    RegulatedEntity.hasMany(models.RegulatedEntityInspectionType, {
-      as: 'reInspectionType',
-      foreignKey: 'regulatedEntityId'
-    });
-    RegulatedEntity.hasMany(models.RegulatedEntityItem, {
-      as: 'reItem',
-      foreignKey: 'regulatedEntityId'
-    });
-    RegulatedEntity.hasMany(models.Contacts, {
-      as: 'contacts',
-      foreignKey: 'regulatedEntityId'
-    });
-    RegulatedEntity.hasMany(models.Attachments, {
-      as: 'attachments',
-      foreignKey: 'regulatedEntityId'
-    });
   }
 }
 export function initRegulatedEntity(sequelize: Sequelize) {
