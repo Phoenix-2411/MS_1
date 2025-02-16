@@ -17,7 +17,7 @@ router.get('/find', async (req: Request, res: Response) => {
 
 router.get('/list', async (req: Request, res: Response) => {
     try {
-        const { page = '1', pageSize = '10', all = 'false', ...filters } = req.query;
+        const { page = '1', pageSize = '10', all = 'false', sortBy, sortOrder, ...filters } = req.query;
 
         const pagination: IPaginationOpts = {
             pageSize: parseInt(pageSize as string, 10),

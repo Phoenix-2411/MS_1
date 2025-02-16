@@ -1,7 +1,5 @@
-import { ContactsAttributes, Contacts } from '../models/contacts';
 import { Models } from '../models';
 import { IPaginationOpts } from '../interface/request';
-import { RegulatedEntity } from '../models/regulatedEntity';
 
 export const find = async (where: { [key: string]: any }) => {
 	where['deleted'] = false;
@@ -221,14 +219,9 @@ export const list = async (
 // }
 
 //optimized
-export const listREContact = async (where: { [key: string]: any }, pagination: IPaginationOpts) => {
-	// const orderBy = where['orderBy'];
-	// delete where['orderBy'];
-	where['deleted'] = false;
-	// const totalCount = await Models.Contacts.findAll({ where: where });
-	// const count = (totalCount.length) ? totalCount.length : 0;
-	// let rows: Object[];
 
+export const listREContact = async (where: { [key: string]: any }, pagination: IPaginationOpts) => {
+	where['deleted'] = false;
 	const count = await Models.Contacts.count({ where: where });
 	const rows = await Models.Contacts.findAll({
 		where: where,

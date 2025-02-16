@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import sequelize from './db';
 import { attachmentsRouter } from './routes/attachments.routes';
 import { contactsRouter } from './routes/contacts.routes';
+import { CovidDataRouter } from './routes/covidData.routes';
 
 dotenv.config();
 const app = express();
@@ -24,4 +25,5 @@ async function startServer() {
 
 app.use('/attachments', attachmentsRouter);
 app.use('/contacts', contactsRouter);
+app.use('/covidData', CovidDataRouter);
 startServer();
