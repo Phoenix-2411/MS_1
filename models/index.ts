@@ -30,25 +30,25 @@ RegulatedEntity.hasMany(Attachments, { as: 'attachments', foreignKey: 'regulated
 RegulatedEntityInspectionType.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId' });
 RegulatedEntityInspectionType.hasMany(RegulatedEntityItem, { as: 'reItem', foreignKey: 'regulatedEntityInspectionTypeId' });
 RegulatedEntityInspectionType.hasMany(RiskMetric, { as: 'riskMetrics', foreignKey: 'regulatedEntityInspectionTypeId' });
-RegulatedEntityInspectionType.hasMany(Contacts, { as: 'contact', foreignKey: 'regulatedEntityInspectionTypeId' });
-RegulatedEntityInspectionType.hasMany(Attachments);
-RegulatedEntityInspectionType.hasOne(ReitDetails);
+RegulatedEntityInspectionType.hasMany(Contacts, { as: 'contacts', foreignKey: 'regulatedEntityInspectionTypeId' });
+RegulatedEntityInspectionType.hasMany(Attachments, { as: 'attachments', foreignKey: 'regulatedEntityInspectionTypeId' });
+RegulatedEntityInspectionType.hasOne(ReitDetails, { as: 'reitDetails', foreignKey: 'regulatedEntityInspectionTypeId' });
 
 //RegulatedEntityItem
 RegulatedEntityItem.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId' });
 RegulatedEntityItem.belongsTo(RegulatedEntityInspectionType, { as: 'reInspectionType', foreignKey: 'regulatedEntityInspectionTypeId' });
-RegulatedEntityItem.hasMany(Attachments);
+RegulatedEntityItem.hasMany(Attachments, { as: 'attachments', foreignKey: 'regulatedEntityItemId' });
 
 //Contacts
 Contacts.belongsTo(RegulatedEntityInspectionType, { foreignKey: 'regulatedEntityInspectionTypeId' });
 Contacts.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId' });
 
-Attachments.removeAttribute('RegulatedEntityInspectionTypeId');
-Attachments.removeAttribute('RegulatedEntityItemId');
+// Attachments.removeAttribute('RegulatedEntityInspectionTypeId');s
+// Attachments.removeAttribute('RegulatedEntityItemId');
 //Attachments
-Attachments.belongsTo(RegulatedEntityInspectionType, { foreignKey: 'regulatedEntityInspectionTypeId', targetKey: 'id' });
-Attachments.belongsTo(RegulatedEntityItem, { foreignKey: 'regulatedEntityItemId', targetKey: 'id' });
-Attachments.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId', targetKey: 'id' });
+Attachments.belongsTo(RegulatedEntityInspectionType, { foreignKey: 'regulatedEntityInspectionTypeId' });
+Attachments.belongsTo(RegulatedEntityItem, { foreignKey: 'regulatedEntityItemId' });
+Attachments.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId' });
 // console.log("-------row--------", row);
 
 

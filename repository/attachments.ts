@@ -32,7 +32,7 @@ export const list = async (
 ) => {
 	whereObject['deleted'] = false;
 
-	const totalCount = await Models.Attachments.count({ where: whereObject });
+	const count = await Models.Attachments.count({ where: whereObject });
 	const rows = await Models.Attachments.findAll({
 		where: whereObject,
 		limit: !pagination.all ? pagination.pageSize : undefined,
@@ -41,7 +41,7 @@ export const list = async (
 	});
 
 
-	return { count: totalCount, rows };
+	return { count, rows };
 };
 
 

@@ -27,7 +27,7 @@ export class Attachments extends Model<
   attachmentsAttributes
 > implements attachmentsAttributes {
   id?: string;
-  regulatedEntityInspectionTypeId?: string;
+  regulatedEntityInspectionTypeId!: string;
   regulatedEntityItemId?: string;
   mimeType?: string;
   title?: string;
@@ -61,13 +61,15 @@ export function initAttachments(sequelize: Sequelize) {
       },
       regulatedEntityInspectionTypeId: {
         type: DataTypes.UUID,
+        allowNull: true,
         references: { model: 'regulatedEntityInspectionType', key: 'id' },
-        field: 'regulatedEntityInspectionTypeId'
+        // field: 'regulatedEntityInspectionTypeId'
       },
       regulatedEntityItemId: {
         type: DataTypes.UUID,
+        allowNull: true,
         references: { model: 'regulatedEntityItem', key: 'id' },
-        field: 'regulatedEntityItemId'
+        // field: 'regulatedEntityItemId'
       },
       mimeType: {
         type: DataTypes.STRING
@@ -114,8 +116,9 @@ export function initAttachments(sequelize: Sequelize) {
       },
       regulatedEntityId: {
         type: DataTypes.UUID,
+        allowNull: true,
         references: { model: 'regulatedEntity', key: 'id' },
-        field: 'regulatedEntityId'
+        // field: 'regulatedEntityId'
       },
     },
     {
