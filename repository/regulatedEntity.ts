@@ -1,141 +1,240 @@
 import { Models } from '../models/index';
 import { IPaginationOpts } from '../interface/request';
-import { Op, QueryTypes } from 'sequelize';
+import { Op, QueryTypes, literal } from 'sequelize';
 import sequelize from '../db';
 
 
 
 export const find = async (
-	whereObject: { [key: string]: any },
-	pagination: IPaginationOpts,
-	details: string
+  whereObject: { [key: string]: any },
+  pagination: IPaginationOpts,
+  details: string
 ) => {
-	whereObject['deleted'] = false;
+  whereObject['deleted'] = false;
 
-	const includeOptions = details === 'true' ? [
-		{
-			model: Models.RegulatedEntityInspectionType,
-			as: 'reInspectionType',
-			where: { deleted: false },
-			required: true, // Ensures only matching reInspectionTypes are included
-			include: [
-				{
-					model: Models.Contacts,
-					as: 'contacts',
-					where: { deleted: false },
-					required: false
-				},
-				{
-					model: Models.Attachments,
-					as: 'attachments',
-					where: {
-						deleted: false,
-						regulatedEntityItemId: { [Op.eq]: null }
-					},
-					required: false
-				}
-			]
-		}
-	] : [];
+  const includeOptions = details === 'true' ? [
+    {
+      model: Models.RegulatedEntityInspectionType,
+      as: 'reInspectionType',
+      where: { deleted: false },
+      required: true, // Ensures only matching reInspectionTypes are included
+      include: [
+        {
+          model: Models.Contacts,
+          as: 'contacts',
+          where: { deleted: false },
+          required: false
+        },
+        {
+          model: Models.Attachments,
+          as: 'attachments',
+          where: {
+            deleted: false,
+            regulatedEntityItemId: { [Op.eq]: null }
+          },
+          required: false
+        }
+      ]
+    }
+  ] : [];
 
-	const rows = await Models.RegulatedEntity.findAll({
-		where: whereObject,
-		include: includeOptions,
-		limit: !pagination.all ? pagination.pageSize : undefined,
-		offset: !pagination.all ? pagination.offset : undefined,
-		order: [[pagination.sortBy || 'updatedAt', pagination.sortOrder || 'DESC']]
-	});
+  const rows = await Models.RegulatedEntity.findAll({
+    where: whereObject,
+    include: includeOptions,
+    limit: !pagination.all ? pagination.pageSize : undefined,
+    offset: !pagination.all ? pagination.offset : undefined,
+    order: [[pagination.sortBy || 'updatedAt', pagination.sortOrder || 'DESC']],
+    subQuery: false
+  });
 
-	if (rows.length === 1 && whereObject['id']) {
-		return rows[0];
-	}
+  if (rows.length === 1 && whereObject['id']) {
+    return rows[0];
+  }
 
-	const count = await Models.RegulatedEntity.count({
-		where: whereObject
-	});
+  const count = await Models.RegulatedEntity.count({
+    where: whereObject
+  });
 
-	return { count, rows };
+  return { count, rows };
 };
 
+
+// export const find = async (
+// 	whereObject: { [key: string]: any },
+// 	pagination: IPaginationOpts,
+// 	details: string
+// ) => {
+// 	const results = await Models.RegulatedEntity.findAll({
+// 		where: {
+// 			deleted: false,
+// 			// Mimic the EXISTS clause: only include RegulatedEntity rows that have at least one non-deleted inspection type.
+// 			[Op.and]: literal(`EXISTS (
+// 			SELECT 1
+// 			FROM "regulatedentityservice"."regulatedEntityInspectionType" AS "reInspectionType"
+// 			WHERE "reInspectionType"."deleted" = false
+// 			  AND "reInspectionType"."regulatedEntityId" = "RegulatedEntity"."id"
+// 		  )`)
+// 		},
+// 		order: [['state', 'DESC']],
+// 		limit: 5,
+// 		offset: 5,
+// 		subQuery: false, // ensures the ordering/limit apply to the main query, not the subquery
+// 		include: [
+// 			{
+// 				model: Models.RegulatedEntityInspectionType,
+// 				as: 'reInspectionType',
+// 				where: { deleted: false },
+// 				required: true, // inner join equivalent
+// 				include: [
+// 					{
+// 						model: Models.Contacts,
+// 						as: 'contacts',
+// 						where: { deleted: false },
+// 						required: false // left join
+// 					},
+// 					{
+// 						model: Models.Attachments,
+// 						as: 'attachments',
+// 						where: {
+// 							deleted: false,
+// 							regulatedEntityItemId: { [Op.eq]: null }
+// 						},
+// 						required: false // left join
+// 					}
+// 				]
+// 			}
+// 		]
+// 	});
+
+// 	return results;
+// };
 
 export const findById = async (where: { [key: string]: any }, details: string) => {
-	where['deleted'] = false;
-	// tslint:disable-next-line: triple-equals
-	if (details == 'true') {
-		return Models.RegulatedEntity.findOne({
-			where,
-			include: [
-				{
-					model: Models.RegulatedEntityInspectionType,
-					as: 'reInspectionType',
-					where: { deleted: false },
-					required: false,
-					include: [
-						{
-							model: Models.RegulatedEntityItem,
-							as: 'reItem',
-							where: { deleted: false },
-							required: false,
-							include: [{
-								model: Models.Attachments,
-								as: 'attachments',
-								where: { deleted: false },
-								required: false
-							}]
-						},
-						{
-							model: Models.Contacts,
-							as: 'contacts',
-							where: { deleted: false },
-							required: false
-						},
-						{
-							model: Models.Attachments,
-							as: 'attachments',
-							where: {
-								deleted: false, regulatedEntityItemId: {
-									[Op.eq]: null
-								}
-							},
-							required: false
-						}
-					]
-				},
-			]
-		});
-	} else {
-		return Models.RegulatedEntity.findOne({
-			where,
-			include: [
-				{
-					model: Models.Attachments,
-					as: 'attachments',
-					where: {
-						deleted: false,
-						regulatedEntityInspectionTypeId: {
-							[Op.eq]: null
-						},
-						regulatedEntityItemId: {
-							[Op.eq]: null
-						}
-					},
-					required: false
-				},
-				{
-					model: Models.Contacts,
-					as: 'contacts',
-					where: { deleted: false },
-					required: false
-				}
-			]
-		});
-	}
+  where['deleted'] = false;
+  // tslint:disable-next-line: triple-equals
+  if (details == 'true') {
+    return Models.RegulatedEntity.findOne({
+      where,
+      subQuery: false,
+      include: [
+        {
+          model: Models.RegulatedEntityInspectionType,
+          as: 'reInspectionType',
+          where: { deleted: false },
+          required: false,
+          include: [
+            {
+              model: Models.RegulatedEntityItem,
+              as: 'reItem',
+              where: { deleted: false },
+              required: false,
+              include: [{
+                model: Models.Attachments,
+                as: 'attachments',
+                where: { deleted: false },
+                required: false
+              }]
+            },
+            {
+              model: Models.Contacts,
+              as: 'contacts',
+              where: { deleted: false },
+              required: false
+            },
+            {
+              model: Models.Attachments,
+              as: 'attachments',
+              where: {
+                deleted: false, regulatedEntityItemId: {
+                  [Op.eq]: null
+                }
+              },
+              required: false
+            }
+          ]
+        },
+      ]
+    });
+  } else {
+    return Models.RegulatedEntity.findOne({
+      where,
+      include: [
+        {
+          model: Models.Attachments,
+          as: 'attachments',
+          where: {
+            deleted: false,
+            regulatedEntityInspectionTypeId: {
+              [Op.eq]: null
+            },
+            regulatedEntityItemId: {
+              [Op.eq]: null
+            }
+          },
+          required: false
+        },
+        {
+          model: Models.Contacts,
+          as: 'contacts',
+          where: { deleted: false },
+          required: false
+        }
+      ]
+    });
+  }
 };
 
+
+// export const findById = async function getRegulatedEntitiesWithDetails() {
+// 	const entities = await Models.RegulatedEntity.findAll({
+// 		where: {
+// 			deleted: false,
+// 			// Only include RegulatedEntity rows that have at least one active inspection type
+// 			[Op.and]: literal(`EXISTS (
+//       SELECT 1
+//       FROM "regulatedentityservice"."regulatedEntityInspectionType" AS "reInspectionType"
+//       WHERE "reInspectionType"."deleted" = false
+//         AND "reInspectionType"."regulatedEntityId" = "RegulatedEntity"."id"
+//     )`)
+// 		},
+// 		order: [['state', 'DESC']],
+// 		limit: 5,
+// 		offset: 5,
+// 		include: [
+// 			{
+// 				model: Models.RegulatedEntityInspectionType,
+// 				as: 'reInspectionType',
+// 				where: { deleted: false },
+// 				required: true, // INNER JOIN equivalent
+// 				include: [
+// 					{
+// 						model: Models.Contacts,
+// 						as: 'contacts',
+// 						where: { deleted: false },
+// 						required: false // LEFT JOIN
+// 					},
+// 					{
+// 						model: Models.Attachments,
+// 						as: 'attachments',
+// 						where: {
+// 							deleted: false,
+// 							regulatedEntityItemId: { [Op.eq]: null }
+// 						},
+// 						required: false // LEFT JOIN
+// 					}
+// 				]
+// 			}
+// 		],
+// 		// Prevent Sequelize from wrapping the main query in a subquery.
+// 		subQuery: false
+// 	});
+
+// 	return entities;
+// }
 
 
 export const O1 = async function getRegulatedEntitiesWithDetails() {
-	const query = `
+  const query = `
         WITH re_entities AS (
   SELECT
     "RegulatedEntity"."id",
@@ -246,14 +345,14 @@ ORDER BY re."state" DESC;
 
     `;
 
-	const results = await sequelize.query(query, { type: QueryTypes.SELECT });
-	// console.log(results);
+  const results = await sequelize.query(query, { type: QueryTypes.SELECT });
+  // console.log(results);
 
-	return results;
+  return results;
 }
 
 export const O2 = async function getRegulatedEntitiesWithDetails() {
-	const query = `
+  const query = `
 	WITH entity AS (
   SELECT 
     "id",
@@ -408,7 +507,7 @@ LEFT JOIN "regulatedentityservice"."attachments" rat
 
     `;
 
-	const results = await sequelize.query(query, { type: QueryTypes.SELECT });
+  const results = await sequelize.query(query, { type: QueryTypes.SELECT });
 
-	return results;
+  return results;
 }

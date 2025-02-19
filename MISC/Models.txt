@@ -1,0 +1,1140 @@
+i am using sequelize models to query to my postgreSQL database. i am giving you the models one by one how they are defined.your job is to understand how the model is defined,what fields are used how each model is connected with other model/s.
+
+RegulatedEntity model:
+import { DataTypes, Model, UUIDV4, Sequelize } from 'sequelize';
+
+export interface RegulatedEntityAttributes {
+  id: string;
+  clientCode: string;
+  entityType?: string;
+  externalId?: string;
+  name: string;
+  address?: string;
+  zip?: string;
+  country?: string;
+  state: string;
+  county?: string;
+  municipality?: string;
+  latitude?: number;
+  longitude?: number;
+  clientMetaData: any;
+  owners: string;
+  attributeMap: any;
+  active?: Boolean;
+  deleted?: Boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+}
+
+export class RegulatedEntity extends Model<RegulatedEntityAttributes> implements RegulatedEntityAttributes {
+  id!: string;
+  clientCode!: string;
+  entityType?: string;
+  externalId?: string;
+  name!: string;
+  address?: string;
+  zip?: string;
+  country?: string;
+  state!: string;
+  county?: string;
+  municipality?: string;
+  latitude?: number;
+  longitude?: number;
+  clientMetaData: any;
+  owners!: string;
+  attributeMap: any;
+  active?: Boolean;
+  deleted?: Boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  static associate(models: any) {
+    // define association here
+  }
+}
+export function initRegulatedEntity(sequelize: Sequelize) {
+  RegulatedEntity.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: UUIDV4,
+      allowNull: false
+    },
+    clientCode: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    entityType: {
+      type: DataTypes.STRING
+    },
+    externalId: {
+      type: DataTypes.STRING
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    address: {
+      type: DataTypes.TEXT
+    },
+    zip: {
+      type: DataTypes.STRING
+    },
+    country: {
+      type: DataTypes.STRING
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    county: {
+      type: DataTypes.STRING
+    },
+    municipality: {
+      type: DataTypes.STRING
+    },
+    latitude: {
+      type: DataTypes.FLOAT
+    },
+    longitude: {
+      type: DataTypes.FLOAT
+    },
+    clientMetaData: {
+      type: DataTypes.JSONB
+    },
+    owners: {
+      type: DataTypes.STRING
+    },
+    attributeMap: {
+      type: DataTypes.JSONB
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    createdBy: {
+      type: DataTypes.UUID
+    },
+    updatedBy: {
+      type: DataTypes.UUID
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+    }
+  }, {
+    sequelize,
+    modelName: 'RegulatedEntity',
+    timestamps: true,
+    schema: 'regulatedentityservice',
+    tableName: 'regulatedEntity',
+  });
+}
+
+RegulatedEntityInspectionType Model:
+import { DataTypes, Model, Sequelize, UUIDV4 } from 'sequelize';
+
+// Define the interface inside the file
+export interface RegulatedEntityInspectionTypeAttributes {
+  id: string;
+  clientCode: string;
+  externalId?: string;
+  regulatedEntityId: string;
+  inspectionTypeCode: string;
+  name: string;
+  address?: string;
+  latitude?: number;
+  longitude?: number;
+  state: string;
+  county?: string;
+  zip?: string;
+  country?: string;
+  municipality?: string;
+  mailingAddress: string;
+  attributeMap?: JSON;
+  clientMetaData?: JSON;
+  active: boolean;
+  deleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy?: string;
+  updatedBy?: string;
+  regStartDate: Date;
+}
+
+// Define the class
+export class RegulatedEntityInspectionType extends Model<
+  RegulatedEntityInspectionTypeAttributes
+> implements RegulatedEntityInspectionTypeAttributes {
+  id!: string;
+  clientCode!: string;
+  externalId?: string;
+  regulatedEntityId!: string;
+  inspectionTypeCode!: string;
+  name!: string;
+  address?: string;
+  latitude?: number;
+  longitude?: number;
+  state!: string;
+  county?: string;
+  zip?: string;
+  country?: string;
+  municipality?: string;
+  mailingAddress!: string;
+  attributeMap?: JSON;
+  clientMetaData?: JSON;
+  active!: boolean;
+  deleted!: boolean;
+  createdAt!: Date;
+  updatedAt!: Date;
+  createdBy?: string;
+  updatedBy?: string;
+  regStartDate!: Date;
+
+  static associate(models: any) {
+    // Define associations here
+  }
+}
+
+// Define the init method separately
+export function initRegulatedEntityInspectionType(sequelize: Sequelize) {
+  RegulatedEntityInspectionType.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: UUIDV4,
+        allowNull: false
+      },
+      clientCode: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      externalId: {
+        type: DataTypes.STRING
+      },
+      regulatedEntityId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: { model: 'regulatedEntity', key: 'id' }
+      },
+      inspectionTypeCode: {
+        type: DataTypes.STRING
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      address: {
+        type: DataTypes.TEXT
+      },
+      latitude: {
+        type: DataTypes.FLOAT
+      },
+      longitude: {
+        type: DataTypes.FLOAT
+      },
+      state: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      county: {
+        type: DataTypes.STRING
+      },
+      municipality: {
+        type: DataTypes.STRING
+      },
+      mailingAddress: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      attributeMap: {
+        type: DataTypes.JSONB
+      },
+      clientMetaData: {
+        type: DataTypes.JSONB
+      },
+      zip: {
+        type: DataTypes.STRING
+      },
+      country: {
+        type: DataTypes.STRING
+      },
+      active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
+      deleted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      createdBy: {
+        type: DataTypes.UUID
+      },
+      updatedBy: {
+        type: DataTypes.UUID
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      regStartDate: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      }
+    },
+    {
+      sequelize,
+      modelName: 'RegulatedEntityInspectionType',
+      tableName: 'regulatedEntityInspectionType',
+      schema: 'regulatedentityservice',
+      timestamps: true
+    }
+  );
+}
+
+RegulatedEntityItem Model:
+import { DataTypes, Model, Sequelize, UUIDV4 } from 'sequelize';
+
+// Define the interface inside the file
+export interface RegulatedEntityItemAttributes {
+  id?: string;
+  clientCode: string;
+  externalId?: string;
+  regulatedEntityInspectionTypeId: string;
+  regulatedEntityId?: string;
+  keyName: string;
+  keyValue?: string;
+  attributeMap?: JSON;
+  active?: Boolean;
+  deleted?: Boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+}
+
+export interface RegulatedEntityItemAttachmentAttributes {
+  id: string;
+  inspectionId: string;
+  contextType: string;
+  mimeType: string;
+  title: string;
+  description: string;
+  active: Boolean;
+  deleted: Boolean;
+  annotations?: JSON;
+  annotationTypes?: JSON;
+}
+
+// Define the class
+export class RegulatedEntityItem extends Model<
+  RegulatedEntityItemAttributes
+> implements RegulatedEntityItemAttributes {
+  id?: string;
+  clientCode!: string;
+  externalId?: string;
+  regulatedEntityInspectionTypeId!: string;
+  regulatedEntityId?: string;
+  keyName!: string;
+  keyValue?: string;
+  attributeMap?: JSON;
+  active?: Boolean;
+  deleted?: Boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+
+  static associate(models: any) {
+    // Define associations here
+  }
+}
+
+// Define the init method separately
+export function initRegulatedEntityItem(sequelize: Sequelize) {
+  RegulatedEntityItem.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: UUIDV4,
+        allowNull: false
+      },
+      clientCode: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      externalId: {
+        type: DataTypes.STRING,
+      },
+      regulatedEntityInspectionTypeId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: 'regulatedEntityInspectionType',
+          key: 'id'
+        }
+      },
+      regulatedEntityId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: 'regulatedEntity',
+          key: 'id'
+        }
+      },
+      keyName: {
+        type: DataTypes.STRING
+      },
+      keyValue: {
+        type: DataTypes.STRING
+      },
+      attributeMap: {
+        type: DataTypes.JSONB
+      },
+      active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
+      deleted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      createdBy: {
+        type: DataTypes.UUID
+      },
+      updatedBy: {
+        type: DataTypes.UUID
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      }
+    },
+    {
+      sequelize,
+      modelName: 'RegulatedEntityItem',
+      tableName: 'regulatedEntityItem',
+      schema: 'regulatedentityservice',
+      timestamps: true
+    }
+  );
+}
+
+
+Contacts Model:
+import { DataTypes, Model, Sequelize, UUIDV4 } from 'sequelize';
+
+export interface IContactInfo {
+  id?: string;
+  lastName?: string;
+  firstName?: string;
+  workEmail?: string;
+  workPhone?: string;
+  contactType?: string;
+  isAssociatedToReIt?: boolean;
+  title?: string;
+  regulatedEntityId?: string;
+  regulatedEntityInspectionTypeId?: string;
+}
+// Define the interface inside the file
+export interface ContactsAttributes {
+  id: string;
+  regulatedEntityInspectionTypeId: string;
+  contactType?: string;
+  firstname: string;
+  middlename?: string;
+  lastname?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  default: boolean;
+  active?: Boolean;
+  deleted?: Boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  workPhone?: string;
+  workEmail?: string;
+  clientMetaData?: any;
+  title?: string;
+  regulatedEntityId?: string;
+}
+
+
+// Define the class
+export class Contacts extends Model<
+  ContactsAttributes
+> implements ContactsAttributes {
+  id!: string;
+  regulatedEntityInspectionTypeId!: string;
+  contactType?: string;
+  firstname!: string;
+  middlename?: string;
+  lastname?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  default!: boolean;
+  active?: Boolean;
+  deleted?: Boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  workPhone?: string;
+  workEmail?: string;
+  clientMetaData?: any;
+  title?: string;
+  regulatedEntityId?: string;
+
+  static associate(models: any) {
+    // Define associations here
+
+  }
+}
+
+// Define the init method separately
+export function initContacts(sequelize: Sequelize) {
+  Contacts.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: UUIDV4,
+        allowNull: false
+      },
+      regulatedEntityInspectionTypeId: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: {
+          model: 'regulatedEntityInspectionType',
+          key: 'id'
+        }
+      },
+      contactType: {
+        type: DataTypes.STRING
+      },
+      firstname: {
+        type: DataTypes.STRING
+      },
+      middlename: {
+        type: DataTypes.STRING
+      },
+      lastname: {
+        type: DataTypes.STRING
+      },
+      address: {
+        type: DataTypes.TEXT
+      },
+      city: {
+        type: DataTypes.STRING
+      },
+      state: {
+        type: DataTypes.STRING
+      },
+      zip: {
+        type: DataTypes.STRING
+      },
+      default: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
+      deleted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      createdBy: {
+        type: DataTypes.UUID
+      },
+      updatedBy: {
+        type: DataTypes.UUID
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      workPhone: {
+        type: DataTypes.STRING
+      },
+      workEmail: {
+        type: DataTypes.STRING
+      },
+      clientMetaData: {
+        type: DataTypes.JSONB
+      },
+      title: {
+        type: DataTypes.STRING
+      },
+      regulatedEntityId: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: {
+          model: 'regulatedEntity',
+          key: 'id'
+        }
+      }
+    },
+    {
+      sequelize,
+      modelName: 'Contacts',
+      tableName: 'contacts',
+      schema: 'regulatedentityservice',
+      timestamps: true
+    }
+  );
+}
+
+Attachments Model:
+import { DataTypes, Model, Sequelize, UUIDV4 } from 'sequelize';
+
+// Define the interface inside the file
+export interface attachmentsAttributes {
+  id?: string;
+  regulatedEntityInspectionTypeId?: string;
+  regulatedEntityItemId?: string;
+  mimeType?: string;
+  title?: string;
+  description?: string;
+  active?: Boolean;
+  deleted?: Boolean;
+  createdBy?: string;
+  updatedBy?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  metaData?: JSON;
+  annotations?: JSON;
+  annotationTypes?: JSON;
+  contextType?: string;
+  regulatedEntityId?: string;
+}
+
+
+// Define the class
+export class Attachments extends Model<
+  attachmentsAttributes
+> implements attachmentsAttributes {
+  id?: string;
+  regulatedEntityInspectionTypeId!: string;
+  regulatedEntityItemId?: string;
+  mimeType?: string;
+  title?: string;
+  description?: string;
+  active?: Boolean;
+  deleted?: Boolean;
+  createdBy?: string;
+  updatedBy?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  metaData?: JSON;
+  annotations?: JSON;
+  annotationTypes?: JSON;
+  contextType?: string;
+  regulatedEntityId?: string;
+
+  static associate(models: any) {
+    // Define associations here
+  }
+}
+
+// Define the init method separately
+export function initAttachments(sequelize: Sequelize) {
+  Attachments.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: UUIDV4,
+        allowNull: false
+      },
+      regulatedEntityInspectionTypeId: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: { model: 'regulatedEntityInspectionType', key: 'id' },
+        // field: 'regulatedEntityInspectionTypeId'
+      },
+      regulatedEntityItemId: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: { model: 'regulatedEntityItem', key: 'id' },
+        // field: 'regulatedEntityItemId'
+      },
+      mimeType: {
+        type: DataTypes.STRING
+      },
+      title: {
+        type: DataTypes.STRING
+      },
+      description: {
+        type: DataTypes.STRING
+      },
+      active: {
+        type: DataTypes.BOOLEAN
+      },
+      deleted: {
+        type: DataTypes.BOOLEAN
+      },
+      createdBy: {
+        type: DataTypes.UUID
+      },
+      updatedBy: {
+        type: DataTypes.UUID
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      metaData: {
+        type: DataTypes.JSONB
+      },
+      annotations: {
+        type: DataTypes.JSONB
+      },
+      annotationTypes: {
+        type: DataTypes.JSONB
+      },
+      contextType: {
+        type: DataTypes.STRING
+      },
+      regulatedEntityId: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: { model: 'regulatedEntity', key: 'id' },
+        // field: 'regulatedEntityId'
+      },
+    },
+    {
+      sequelize,
+      modelName: 'Attachments',
+      tableName: 'attachments',
+      schema: 'regulatedentityservice',
+      timestamps: true
+    }
+  );
+}
+
+
+ReitDetails Model:
+import { DataTypes, Model, Sequelize, UUIDV4 } from 'sequelize';
+
+// Define the interface inside the file
+export interface reitDetailsAttributes {
+  regulatedEntityInspectionTypeId: string;
+  lastInspectionId?: string;
+  lastInspectionDate?: Date;
+  assignedToId?: string;
+  assignedToName?: string;
+  assignedToStartDate?: Date;
+  assignedToTeamId?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+
+// Define the class
+export class ReitDetails extends Model<
+  reitDetailsAttributes
+> implements reitDetailsAttributes {
+  regulatedEntityInspectionTypeId!: string;
+  lastInspectionId?: string;
+  lastInspectionDate?: Date;
+  assignedToId?: string;
+  assignedToName?: string;
+  assignedToStartDate?: Date;
+  assignedToTeamId?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+
+  static associate(models: any) {
+    // Define associations here
+
+    // ReitDetails.removeAttribute('id');
+  }
+
+}
+
+// Define the init method separately
+export function initReitDetails(sequelize: Sequelize) {
+  ReitDetails.init(
+    {
+      regulatedEntityInspectionTypeId: {
+        type: DataTypes.UUID,
+        references: { model: 'regulatedEntityInspectionType', key: 'id' },
+        allowNull: false,
+        primaryKey: true
+      },
+      lastInspectionId: {
+        type: DataTypes.UUID
+      },
+      lastInspectionDate: DataTypes.DATE,
+      assignedToId: {
+        type: DataTypes.STRING
+      },
+      assignedToName: {
+        type: DataTypes.STRING
+      },
+      assignedToStartDate: DataTypes.DATE,
+      assignedToTeamId: {
+        type: DataTypes.UUID
+      },
+      createdBy: {
+        type: DataTypes.UUID
+      },
+      updatedBy: {
+        type: DataTypes.UUID
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      }
+    },
+    {
+      sequelize,
+      modelName: 'ReitDetails',
+      tableName: 'reitDetails',
+      schema: 'regulatedentityservice',
+      timestamps: true
+    }
+  );
+}
+
+CovidData Model:
+import { DataTypes, Model, Sequelize, UUIDV4 } from 'sequelize';
+
+// Define the interface inside the file
+export interface CovidDataAttributes {
+  id: bigint;
+  iso2?: string;
+  iso3?: string;
+  code3?: number;
+  FIPS?: number;
+  county?: string;
+  state?: string;
+  country?: string;
+  lat?: number;
+  long?: number;
+  combinedKey?: string;
+  date: string;
+  count: number;
+  createdAt: string;
+}
+
+
+// Define the class
+export class CovidData extends Model<
+  CovidDataAttributes
+> implements CovidDataAttributes {
+  id!: bigint;
+  iso2?: string;
+  iso3?: string;
+  code3?: number;
+  FIPS?: number;
+  county?: string;
+  state?: string;
+  country?: string;
+  lat?: number;
+  long?: number;
+  combinedKey?: string;
+  date!: string;
+  count!: number;
+  createdAt!: string;
+
+  static associate(models: any) {
+    // Define associations here
+  }
+}
+
+// Define the init method separately
+export function initCovidData(sequelize: Sequelize) {
+  CovidData.init(
+    {
+      id: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        allowNull: false
+      },
+      iso2: {
+        type: DataTypes.STRING,
+      },
+      iso3: {
+        type: DataTypes.STRING,
+      },
+      code3: {
+        type: DataTypes.INTEGER,
+      },
+      FIPS: {
+        type: DataTypes.INTEGER,
+      },
+      county: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      state: {
+        type: DataTypes.STRING,
+      },
+      country: {
+        type: DataTypes.STRING,
+      },
+      lat: {
+        type: DataTypes.FLOAT,
+      },
+      long: {
+        type: DataTypes.FLOAT,
+      },
+      combinedKey: {
+        type: DataTypes.STRING,
+      },
+      date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false
+      },
+      count: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      }
+    },
+    {
+      sequelize,
+      modelName: 'CovidData',
+      tableName: 'covidData',
+      schema: 'regulatedentityservice',
+      timestamps: false
+    }
+  );
+}
+
+riskMetric Model:
+import { DataTypes, Model, Sequelize, UUIDV4 } from 'sequelize';
+
+// Define the interface inside the file
+export interface RiskMetricAttributes {
+  id?: string;
+  regulatedEntityInspectionTypeId?: string;
+  category?: string;
+  value?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+}
+
+
+// Define the class
+export class RiskMetric extends Model<
+  RiskMetricAttributes
+> implements RiskMetricAttributes {
+  id!: string;
+  regulatedEntityInspectionTypeId?: string;
+  category?: string;
+  value?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  regStartDate?: string;
+
+  static associate(models: any) {
+    // Define associations here
+
+  }
+}
+
+// Define the init method separately
+export function initRiskMetric(sequelize: Sequelize) {
+  RiskMetric.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: UUIDV4,
+        allowNull: false
+      },
+      regulatedEntityInspectionTypeId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: 'regulatedEntityInspectionType',
+          key: 'id'
+        }
+      },
+      category: {
+        type: DataTypes.STRING
+      },
+      value: {
+        type: DataTypes.FLOAT
+      },
+      createdBy: {
+        type: DataTypes.UUID
+      },
+      updatedBy: {
+        type: DataTypes.UUID
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      }
+    },
+    {
+      sequelize,
+      modelName: 'RiskMetric',
+      tableName: 'riskMetric',
+      schema: 'regulatedentityservice',
+      timestamps: true
+    }
+  );
+}
+
+Associations of Models:
+'use strict';
+
+import sequelize from '../db'; // Import Sequelize instance
+import { Attachments, initAttachments } from './attachments';
+import { Contacts, initContacts } from './contacts';
+import { CovidData, initCovidData } from './covidData';
+import { RegulatedEntity, initRegulatedEntity } from './regulatedEntity';
+import { RegulatedEntityInspectionType, initRegulatedEntityInspectionType } from './regulatedentityinspectiontype';
+import { RegulatedEntityItem, initRegulatedEntityItem } from './regulatedEntityItem';
+import { ReitDetails, initReitDetails } from './reitDetails';
+import { RiskMetric, initRiskMetric } from './riskMetric';
+
+// Initialize models first
+initRegulatedEntity(sequelize);
+initRegulatedEntityInspectionType(sequelize);
+initRegulatedEntityItem(sequelize);
+initContacts(sequelize);
+initAttachments(sequelize);
+initReitDetails(sequelize);
+initCovidData(sequelize);
+initRiskMetric(sequelize);
+
+//RegulatedEntity
+RegulatedEntity.hasMany(RegulatedEntityInspectionType, { as: 'reInspectionType', foreignKey: 'regulatedEntityId' });
+RegulatedEntity.hasMany(RegulatedEntityItem, { as: 'reItem', foreignKey: 'regulatedEntityId' });
+RegulatedEntity.hasMany(Contacts, { as: 'contacts', foreignKey: 'regulatedEntityId' });
+RegulatedEntity.hasMany(Attachments, { as: 'attachments', foreignKey: 'regulatedEntityId' });
+
+//RegulatedEntityInspectionType
+RegulatedEntityInspectionType.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId' });
+RegulatedEntityInspectionType.hasMany(RegulatedEntityItem, { as: 'reItem', foreignKey: 'regulatedEntityInspectionTypeId' });
+RegulatedEntityInspectionType.hasMany(RiskMetric, { as: 'riskMetrics', foreignKey: 'regulatedEntityInspectionTypeId' });
+RegulatedEntityInspectionType.hasMany(Contacts, { as: 'contacts', foreignKey: 'regulatedEntityInspectionTypeId' });
+RegulatedEntityInspectionType.hasMany(Attachments, { as: 'attachments', foreignKey: 'regulatedEntityInspectionTypeId' });
+RegulatedEntityInspectionType.hasOne(ReitDetails, { as: 'reitDetails', foreignKey: 'regulatedEntityInspectionTypeId' });
+
+//RegulatedEntityItem
+RegulatedEntityItem.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId' });
+RegulatedEntityItem.belongsTo(RegulatedEntityInspectionType, { as: 'reInspectionType', foreignKey: 'regulatedEntityInspectionTypeId' });
+RegulatedEntityItem.hasMany(Attachments, { as: 'attachments', foreignKey: 'regulatedEntityItemId' });
+
+//Contacts
+Contacts.belongsTo(RegulatedEntityInspectionType, { foreignKey: 'regulatedEntityInspectionTypeId' });
+Contacts.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId' });
+
+// Attachments.removeAttribute('RegulatedEntityInspectionTypeId');s
+// Attachments.removeAttribute('RegulatedEntityItemId');
+//Attachments
+Attachments.belongsTo(RegulatedEntityInspectionType, { foreignKey: 'regulatedEntityInspectionTypeId' });
+Attachments.belongsTo(RegulatedEntityItem, { foreignKey: 'regulatedEntityItemId' });
+Attachments.belongsTo(RegulatedEntity, { foreignKey: 'regulatedEntityId' });
+// console.log("-------row--------", row);
+
+
+//ReitDetails
+ReitDetails.belongsTo(RegulatedEntityInspectionType);
+
+//RiskMetric
+RiskMetric.belongsTo(RegulatedEntityInspectionType, { as: 'reInspectionType', foreignKey: 'regulatedEntityInspectionTypeId' });
+
+// Create db object to export
+const db: any = {
+  RegulatedEntity,
+  RegulatedEntityInspectionType,
+  RegulatedEntityItem,
+  Contacts,
+  Attachments,
+  ReitDetails,
+  CovidData,
+  RiskMetric,
+  sequelize,
+};
+
+// Log loaded models
+// console.log('Loaded Models:', Object.keys(db));
+
+export { db as Models };
+
+
